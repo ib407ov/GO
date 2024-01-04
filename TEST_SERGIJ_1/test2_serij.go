@@ -7,31 +7,26 @@ import (
 	"net/http"
 )
 
-//	func main() {
-//		http.HandleFunc("/", helloWorld)
-//		//	http.HandleFunc("/", writePost)
-//		port := 3000
-//		fmt.Printf("Server is running on port %d\n", port)
-//		http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
-//	}
-func helloWorld(w http.ResponseWriter, r *http.Request) {
-	log.Println("HelloWorld")
-	fmt.Fprintf(w, "Дані отримано успішно")
-}
-
 type RequestBody struct {
 	Text   string `json:"input"`
 	Header string `json:"data"`
 }
 
-func handleRequest(w http.ResponseWriter, r *http.Request) {
-	//// Отримуємо тіло POST-запиту
-	//body, err := ioutil.ReadAll(r.Body)
-	//if err != nil {
-	//	http.Error(w, "Не вдалося прочитати тіло запиту", http.StatusBadRequest)
-	//	return
-	//}
+func main() {
+	http.HandleFunc("/", helloWorld)
+	// Обробник для шляху "/data"
+	http.HandleFunc("/data", handleRequest)
 
+	// Запускаємо сервер на порту 8080
+	http.ListenAndServe(":4000", nil)
+}
+
+func helloWorld(w http.ResponseWriter, r *http.Request) {
+	log.Println("HelloWorld")
+	fmt.Fprintf(w, "Дані отримано успішно")
+}
+
+func handleRequest(w http.ResponseWriter, r *http.Request) {
 	// Парсимо JSON-дані з тіла запиту
 	var requestBody RequestBody
 	err := json.NewDecoder(r.Body).Decode(&requestBody)
@@ -46,13 +41,4 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 
 	// Відправляємо відповідь клієнту
 	fmt.Fprintf(w, "Дані отримано успішно go naxuj")
-}
-
-func main() {
-	http.HandleFunc("/", helloWorld)
-	// Обробник для шляху "/data"
-	http.HandleFunc("/data", handleRequest)
-
-	// Запускаємо сервер на порту 8080
-	http.ListenAndServe(":4000", nil)
 }
